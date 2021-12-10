@@ -1,0 +1,42 @@
+clear all;
+clc;
+tic;
+syms x y alpha0;
+fprintf('Metode Davidon-Fletcher-Powell');
+%f=x^2-x*y-4*x+y^2-y;
+%x0=[1;2];
+f=5*x^2+y^2+2*x*y+7;
+x0=[1;2];
+gradf=jacobian(f);
+B0=eye(2);
+eps=1e-6;
+i=1;
+normgradf1=1;
+fprintf('\ni         x1         fidouble         norm\n');
+while normgradf1>eps
+    gradf0=double(subs(gradf,[x;y],x0));
+    p0=-double(inv(B0)*gradf0');
+    x1=double(x0)+p0;
+%     x1=x0+alpha0*p0;
+%     falpha0=subs(f,[x;y],x1);
+%     dfalpha0=diff(falpha0,alpha0);
+%     a0min=solve(dfalpha0);
+%     a0min=double(a0min);
+%     x1=subs(x1,alpha0,a0min);
+    
+    f1=subs(f,[x;y],x1);
+    gradf1=double(subs(gradf,[x;y],x1));
+    s0=double(x1-x0);
+    y0=double((gradf1-gradf0)');
+    gam0=1/(y0'*s0);
+    B1=(eye(2)-gam0*y0*s0')*B0*(eye(2)-gam0*s0*y0')+gam0*y0*y0';
+    normgradf1=norm(gradf1);
+    fprintf('%3d     (%5.5f,%5.5f)     %5.5f     %5.5f\n',i,double(x1),double(f1),double(normgradf1));
+    x0=x1;
+    B0=B1;
+    i=i+1;
+end
+ezsurf(f);
+hold on;
+plot3(x1(1,1),x1(2,1),f1,'*r');
+toc;

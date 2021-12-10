@@ -1,0 +1,15 @@
+clc;
+clear all;
+x=-5:0.01:5;
+y=-5:0.01:5;
+[X,Y]=meshgrid(x,y);
+Z=X.^2+Y.^2;
+figure(1);
+mesh(X,Y,Z);
+view([0,90]);
+syms x y;
+f=(x-10)^2+(y-20)^2;%x^2+y^2;
+figure(2);
+ezsurf(f);
+view([0,90]);
+shading interp;
